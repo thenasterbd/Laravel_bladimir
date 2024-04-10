@@ -96,7 +96,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'proyectolaravel@laravel2024.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
