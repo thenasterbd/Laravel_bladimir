@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class LikeController extends Controller
 {
-
     public function index()
     {
         $user = Auth::user();
@@ -26,27 +25,29 @@ class LikeController extends Controller
 
         //IF LIKE EXIST
         $isser_like = Like::where("user_id", $user->id)->where("image_id", $image_id)->count();
+        // dd($isser_like);
 
         if ($isser_like == 0) {
             $like = new Like();
-            $like->image_id = $image_id;
             $like->user_id = $user->id;
+            $like->image_id = (int) $image_id;
 
             $like->save();
 
             return response()->json([
-                "like" => $like
+                "like" => $like,
+                'count' => count($like->image->likes),
+                'status' => 'like',
             ]);
         } else {
             return response()->json([
-                'status' => 'like-exist'
+                'status' => 'like-exist',
+                'error' => $isser_like
             ]);
         }
-
-
     }
 
-    public function dislike($image_id)
+    public function undo_like($image_id)
     {
         $user = Auth::user();
 
@@ -58,14 +59,47 @@ class LikeController extends Controller
 
             return response()->json([
                 "like" => $like,
-                'status' => 'dislike'
+                'count' => count($like->image->likes),
+                'status' => 'undo_like'
             ]);
         } else {
             return response()->json([
-                'status' => 'like-not-exist'
+                'status' => 'undo_like-exist'
             ]);
         }
     }
 
+    public function toggle_like($image_id)
+    {
+        $user = Auth::user();
+
+        $like = Like::where("user_id", $user->id)->where("image_id", $image_id)->first();
+
+        if ($like) {
+            $like->delete();
+
+            return response()->json([
+                "like" => $like,
+                'count' => count($like->image->likes),
+                'status' => 'undo_like'
+            ]);
+        } else {
+            $like = new Like();
+            $like->user_id = $user->id;
+            $like->image_id = (int) $image_id;
+            $like->save();
+
+
+            //CONDICION SI YA EXISTE DISLIKE
+            // $dislike->delete();
+
+            return response()->json([
+                "like" => $like,
+                'count' => count($like->image->likes),
+                'status' => 'like'
+            ]);
+        }
+
+    }
 
 }

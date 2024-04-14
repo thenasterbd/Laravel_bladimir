@@ -14,24 +14,23 @@
     </form>
 
     {{-- AVATAR --}}
-    <h3 class="text-lg font-small text-gray-900 ">
-        {{ __('Current Photo') }}
+    <h3 class="pt-4 text-lg font-small text-gray-900 ">
+        {{ __('Current Photo:') }}
     </h3>
     @include('includes.avatar')
 
     <form method="post" action="{{ route('profile.updatePhoto') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
-        {{-- @method('post') --}}
 
         <div x-data="{ imagePreview: '' }">
-            <label for="image_path" class="block font-medium text-sm text-gray-700">Select Photo</label>
+            <label for="image_path" class="block font-medium text-sm text-gray-700">Select a New Photo</label>
             <input id="image_path" name="image_path" type="file" class="mt-1 block w-full"
                 x-on:change="imagePreview = URL.createObjectURL($event.target.files[0])" accept="image/*">
             <div x-show="imagePreview">
                 <h3 class="text-lg font-small text-gray-900 ">
-                    {{ __('New Photo') }}
+                    {{ __('New Photo:') }}
                 </h3>
-                <img :src="imagePreview" alt="Preview" class="mt-2 max-w-xs">
+                <img :src="imagePreview" alt="Preview" class="mt-2 max-w-xs rounded-full">
             </div>
         </div>
 

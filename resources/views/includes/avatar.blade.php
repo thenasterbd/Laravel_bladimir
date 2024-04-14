@@ -4,5 +4,7 @@
             class="mt-2 max-w-xs rounded-full">
     </div>
 @else
-    <p>You don't have a Photo.</p>
+    <div x-show="defaultAvatarPreview">
+        <img src="{{ asset('img/defaultprofile.png') }}" alt="Default Photo" class="mt-2 max-w-xs rounded-full">
+    </div>
 @endif

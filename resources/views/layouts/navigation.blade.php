@@ -17,29 +17,29 @@
                     </x-nav-link>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
                         {{ __('Users') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('profile', ['id' => Auth::user()->id])" :active="request()->routeIs('profile')">
                         {{ __('My Profile') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px  sm:flex">
                     <x-nav-link :href="route('image.create')" :active="request()->routeIs('image.create')">
                         {{ __('Upload a Photo') }}
                     </x-nav-link>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('likes.index')" :active="request()->routeIs('likes.index')">
                         {{ __('Favorites') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
 
             </div>
 
@@ -50,11 +50,17 @@
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             @if (Auth::user()->image)
-                                <div class="ms-1">
+                                <div class="pr-1">
                                     <img src="{{ route('profile.avatar', ['filename' => Auth::user()->image]) }}"
                                         alt="Current Photo" class="h-6 w-6 rounded-full">
                                 </div>
+                            @else
+                                <div class="pr-1">
+                                    <img src="{{ asset('img/defaultprofile.png') }}" alt="Default Photo"
+                                        class="h-6 w-6 rounded-full">
+                                </div>
                             @endif
+
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -72,10 +78,6 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Configurations') }}
                         </x-dropdown-link>
-
-                        {{-- <x-dropdown-link :href="route('user.config')">
-                            {{ __('Configurations') }}
-                        </x-dropdown-link> --}}
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -115,17 +117,17 @@
             </x-responsive-nav-link>
         </div>
 
-        <div class="pt-2 pb-3 space-y-1">
+        {{-- <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">
                 {{ __('Users') }}
             </x-responsive-nav-link>
-        </div>
+        </div> --}}
 
-        <div class="pt-2 pb-3 space-y-1">
+        {{-- <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('profile', ['id' => Auth::user()->id])" :active="request()->routeIs('profile')">
                 {{ __('My Profile') }}
             </x-responsive-nav-link>
-        </div>
+        </div> --}}
 
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('image.create')" :active="request()->routeIs('image.create')">
@@ -133,11 +135,11 @@
             </x-responsive-nav-link>
         </div>
 
-        <div class="pt-2 pb-3 space-y-1">
+        {{-- <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('likes.index')" :active="request()->routeIs('likes.index')">
                 {{ __('Favorites') }}
             </x-responsive-nav-link>
-        </div>
+        </div> --}}
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

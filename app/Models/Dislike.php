@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Like extends Model
+class Dislike extends Model
 {
     use HasFactory;
 
-    protected $table = 'likes';
+    protected $table = 'dislikes';
 
     public function user()
     {

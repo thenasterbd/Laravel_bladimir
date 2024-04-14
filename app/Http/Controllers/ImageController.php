@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Response;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Dislike;
 
 class ImageController extends Controller
 {
@@ -23,7 +24,7 @@ class ImageController extends Controller
     {
         $validate = $request->validate([
             'description' => ['required'],
-            'image_path' => ['required', 'mimes:jpg,png,webp,jpeg,gif'],
+            'image_path' => ['required', 'mimes:jpg,png,gif,wpeg,jpeg,svg,webp'],
         ]);
 
 
@@ -85,6 +86,13 @@ class ImageController extends Controller
                 }
             }
 
+            //DELETE DISLIKES
+            // if ($dislikes && count($dislikes) > 0) {
+            //     foreach ($dislikes as $dislike) {
+            //         $dislike->delete();
+            //     }
+            // }
+
             //DELETE IMAGES ON STORAGE
             Storage::disk('images')->delete($image->image_path);
 
@@ -98,7 +106,6 @@ class ImageController extends Controller
         }
         return Redirect::route('dashboard')->with($status);
     }
-
 
     public function edit($id)
     {
@@ -121,23 +128,19 @@ class ImageController extends Controller
             'image_path' => ['image'],
         ]);
 
-        // Recoger datos
         $image_id = $request->input('image_id');
         $image_path = $request->file('image_path');
         $description = $request->input('description');
 
-        // Conseguir objeto image
         $image = Image::find($image_id);
         $image->description = $description;
 
-        // Subir fichero
         if ($image_path) {
             $image_path_name = time() . $image_path->getClientOriginalName();
             Storage::disk('images')->put($image_path_name, File::get($image_path));
             $image->image_path = $image_path_name;
         }
 
-        //UPDATE
         $image->update();
 
         return Redirect::route('image.detail', ['id' => $image_id])->with('status', 'post-updated');

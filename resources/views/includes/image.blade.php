@@ -3,22 +3,26 @@
     {{-- USER --}}
     <div id="user" class="pl-2 py-2 max-auto flex items-center bg-gray-200 ">
 
-        <a href="{{ route('profile', ['id' => $image->user->id]) }}" class="flex items-center">
+        {{-- <a href="{{ route('profile', ['id' => $image->user->id]) }}" class="flex items-center"> --}}
 
-            @if ($image->user->image)
-                <div class="mr-1">
-                    <img src="{{ route('profile.avatar', ['filename' => $image->user->image]) }}" alt="Profile Photo"
-                        class="h-8 w-8 rounded-full">
-                </div>
-            @endif
-
-            <div>
-                {{ $image->user->name . ' ' . $image->user->surname }}
+        @if ($image->user->image)
+            <div class="mr-1">
+                <img src="{{ route('profile.avatar', ['filename' => $image->user->image]) }}" alt="Profile Photo"
+                    class="h-8 w-8 rounded-full">
             </div>
-            <p class="pl-2 text-sm text-gray-600">
-                {{ __('@' . $image->user->nick) }}
-            </p>
-        </a>
+        @else
+            <div x-show="defaultAvatarPreview" class="mr-1">
+                <img src="{{ asset('img/defaultprofile.png') }}" alt="Default Photo" class="h-8 w-8 rounded-full">
+            </div>
+        @endif
+
+        <div>
+            {{ $image->user->name . ' ' . $image->user->surname }}
+        </div>
+        <p class="pl-2 text-sm text-gray-600">
+            {{ __('@' . $image->user->nick) }}
+        </p>
+        {{-- </a> --}}
 
     </div>
 
@@ -28,11 +32,15 @@
             style="box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1)">
     </div>
 
+    {{-- DESCRIPTION --}}
+    <div class="pl-2 pt-2">
+        <strong>{{ __('@' . $image->user->nick) }} </strong> {{ $image->description }}
+    </div>
+
+
     {{-- INTERACTON --}}
     <div class="pl-2 pt-2 flex items-center">
-
-
-        <div>
+        <div class="pr-2">
             {{-- IF USER LIKE --}}
             <?php $user_like = false; ?>
 
@@ -42,38 +50,53 @@
                 @endif
             @endforeach
 
-            @if ($user_like)
-                <img src="{{ asset('img/hearts-64(1).png') }}" data-id="{{ $image->id }}" alt="Likes"
-                    class="btn-like" style="width: 25px">
-            @else
-                <img src="{{ asset('img/favorite-3-64.png') }}" data-id="{{ $image->id }}" alt="Likes"
-                    class="btn-dislike" style="width: 25px">
-            @endif
+            <div class="flex items-center">
+                <div class="pr-1">
+                    @if ($user_like)
+                        <img src="{{ asset('img/arrowUpOn.png') }}" data-id="{{ $image->id }}" alt="Likes"
+                            class="btn-like like_image_{{ $image->id }}" style="width: 25px">
+                    @else
+                        <img src="{{ asset('img/arrowUpOff.png') }}" data-id="{{ $image->id }}" alt="Undolike"
+                            class="btn-like like_image_{{ $image->id }}" style="width: 25px">
+                    @endif
+                </div>
+                <strong id='count-likes'>{{ count($image->likes) }}</strong>
+            </div>
+        </div>
+
+
+        <div>
+            {{-- IF USER DISLIKE --}}
+            <?php $user_dislike = false; ?>
+
+            @foreach ($image->dislikes as $dislike)
+                @if ($dislike->user->id == Auth::user()->id)
+                    <?php $user_dislike = true; ?>
+                @endif
+            @endforeach
+
+            <div class="flex items-center">
+                <div class="pr-2">
+                    @if ($user_dislike)
+                        <img src="{{ asset('img/arrowDownOn.png') }}" data-id="{{ $image->id }}" alt="Dislikes"
+                            class="btn-dislike dislike_image_{{ $image->id }}" style="width: 25px">
+                    @else
+                        <img src="{{ asset('img/arrowDownOff.png') }}" data-id="{{ $image->id }}"
+                            alt="undo_Dislikes" class="btn-dislike dislike_image_{{ $image->id }}"
+                            style="width: 25px">
+                    @endif
+                </div>
+                <strong id='count-dislikes'>{{ count($image->dislikes) }}</strong>
+            </div>
         </div>
 
         <div class="pl-4">
             <a href="{{ route('image.detail', ['id' => $image->id]) }}">
-                <img src="{{ asset('img/comments-64.png') }}" alt="Likes" class="img-fluid" style="width: 25px">
+                <img src="{{ asset('img/comment.png') }}" alt="Comment" class="img-fluid" style="width: 25px">
             </a>
         </div>
-
     </div>
 
-    {{-- LIKES COUNT --}}
-    <div class="pl-2 pt-2 ">
-
-        @if (count($image->likes) == 1)
-            <span id="image_like_{{ $image->id }}">{{ count($image->likes) }} Like</span>
-        @else
-            <span id="image_like_{{ $image->id }}">{{ count($image->likes) }} Likes</span>
-        @endif
-
-    </div>
-
-    {{-- DESCRIPTION --}}
-    <div class="pl-2 pt-2">
-        <strong>{{ __('@' . $image->user->nick) }} </strong> {{ $image->description }}
-    </div>
 
     {{-- COMMENT --}}
     <div class="pl-2 py-2">

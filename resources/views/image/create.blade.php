@@ -12,10 +12,10 @@
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900">
-                                {{ __('Include a Photo') }}
+                                {{ __('Upload a Photo') }}
                             </h2>
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __('Add a new Photo with a comment to post') }}
+                                {{ __('Add a new Photo with a comment') }}
                             </p>
                         </header>
 
@@ -23,11 +23,14 @@
                             enctype="multipart/form-data">
                             @csrf
 
-                            <div class="flex flex-col">
-                                <label for="image_path" class="text-sm text-gray-700">Imagen</label>
-                                <input type="file" name="image_path" id="image_path"
-                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    required>
+                            <div class="flex flex-col" x-data="{ imagePreview: '' }">
+                                <label for="image_path" class="text-sm text-gray-700">Photo</label>
+                                <input type="file" name="image_path" id="image_path" class="mt-1" required
+                                    x-on:change="imagePreview = URL.createObjectURL($event.target.files[0])"
+                                    accept="image/*">
+                                <div x-show="imagePreview">
+                                    <img :src="imagePreview" alt="Preview" class="mt-2 ">
+                                </div>
 
                                 @if ($errors->has('image_path'))
                                     <span class="invalid-feedback" role"alert">

@@ -82,6 +82,14 @@ return [
             ],
         ],
 
+        'roundrobin' => [
+            'transport' => 'roundrobin',
+            'mailers' => [
+                'ses',
+                'postmark',
+            ],
+        ],
+
     ],
 
     /*
@@ -96,7 +104,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'proyectolaravel@laravel2024.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 

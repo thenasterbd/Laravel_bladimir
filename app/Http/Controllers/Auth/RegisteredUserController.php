@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -37,6 +38,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Crear un nuevo usuario
         $user = User::create([
             'role' => 'user',
             'name' => $request->name,
@@ -48,8 +50,11 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        // Iniciar sesión con el usuario
         Auth::login($user);
 
+        // Redirigir al panel de control
         return redirect(route('dashboard', absolute: false));
     }
+
 }
