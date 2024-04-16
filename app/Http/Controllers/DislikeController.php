@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dislike;
+use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -44,8 +45,6 @@ class DislikeController extends Controller
                 'status' => 'dislike-exist'
             ]);
         }
-
-
     }
 
     public function undo_dislike($image_id)
@@ -74,6 +73,7 @@ class DislikeController extends Controller
     {
         $user = Auth::user();
 
+        $like = Like::where("user_id", $user->id)->where("image_id", $image_id)->first();
         $dislike = Dislike::where("user_id", $user->id)->where("image_id", $image_id)->first();
 
         if ($dislike) {
@@ -85,14 +85,23 @@ class DislikeController extends Controller
                 'status' => 'undo_dislike'
             ]);
         } else {
-            $dislike = new dislike();
+            $dislike = new Dislike();
             $dislike->user_id = $user->id;
             $dislike->image_id = (int) $image_id;
             $dislike->save();
 
+            // Check if user has already disliked the image
+            if ($like) {
+                $like->delete(); // Remove the existing dislike
 
-            //CONDICION SI YA EXISTE DISdislike
-            // $disdislike->delete();
+                return response()->json([
+                    "dislike" => $dislike,
+                    "like" => $like,
+                    'count' => count($dislike->image->dislikes),
+                    'count_likes' => count($like->image->likes),
+                    'status' => 'dislike-undo_like'
+                ]);
+            }
 
             return response()->json([
                 "dislike" => $dislike,
@@ -100,6 +109,5 @@ class DislikeController extends Controller
                 'status' => 'dislike'
             ]);
         }
-
     }
 }

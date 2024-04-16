@@ -15,15 +15,15 @@
         </div>
         <!-- Columna de los botones -->
 <div class="w-1/2 p-6 sm:p-12 flex flex-col items-center justify-center">
-    <h1 class="text-3xl font-bold mb-4 text-center text-gray-700">Bienvenido a {{ config('Pixel Pioneer', 'Pixel Pioneer') }}</h1>
-    <p class="text-gray-600 mb-8 text-center">Comienza tu nueva aventura con Nosotros.</p>
+    <h1 class="text-3xl font-bold mb-4 text-center text-gray-700">Welcome to {{ config('Pixel Pioneer', 'Pixel Pioneer') }}</h1>
+    <p class="text-gray-600 mb-8 text-center"> Start a new adventure with us.</p>
     <div class="flex flex-col sm:flex-row sm:justify-center gap-4">
         <a href="{{ route('login') }}" class="block text-center w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
-            Iniciar sesión
+        Login
         </a>
         @if (Route::has('register'))
             <a href="{{ route('register') }}" class="block text-center w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
-                Registrarse
+            Sign up
             </a>
         @endif
     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Like;
+use App\Models\Dislike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -25,7 +26,6 @@ class LikeController extends Controller
 
         //IF LIKE EXIST
         $isser_like = Like::where("user_id", $user->id)->where("image_id", $image_id)->count();
-        // dd($isser_like);
 
         if ($isser_like == 0) {
             $like = new Like();
@@ -74,6 +74,7 @@ class LikeController extends Controller
         $user = Auth::user();
 
         $like = Like::where("user_id", $user->id)->where("image_id", $image_id)->first();
+        $dislike = Dislike::where("user_id", $user->id)->where("image_id", $image_id)->first();
 
         if ($like) {
             $like->delete();
@@ -84,14 +85,24 @@ class LikeController extends Controller
                 'status' => 'undo_like'
             ]);
         } else {
+
             $like = new Like();
             $like->user_id = $user->id;
             $like->image_id = (int) $image_id;
             $like->save();
 
+            // Check if user has already liked the image
+            if ($dislike) {
+                $dislike->delete(); // Remove the existing like
 
-            //CONDICION SI YA EXISTE DISLIKE
-            // $dislike->delete();
+                return response()->json([
+                    "dislike" => $dislike,
+                    "like" => $like,
+                    'count' => count($like->image->likes),
+                    'count_dislikes' => count($dislike->image->dislikes),
+                    'status' => 'like-undo_dislike'
+                ]);
+            }
 
             return response()->json([
                 "like" => $like,
@@ -99,7 +110,5 @@ class LikeController extends Controller
                 'status' => 'like'
             ]);
         }
-
     }
-
 }

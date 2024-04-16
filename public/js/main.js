@@ -18,7 +18,7 @@ $(document).ready(function () {
     });
 
     function updateCountLikes(response, image_id, mensaje) {
-        console.log(image_id);
+        console.log(image_id, " ", mensaje);
 
         if (mensaje === "like") {
             $(".like_image_" + image_id)
@@ -36,6 +36,27 @@ $(document).ready(function () {
                 "src",
                 url + "/img/arrowUpOff.png"
             );
+        } else if (mensaje === "like-undo_dislike") {
+            //LIKE
+            $(".like_image_" + image_id)
+                .addClass("btn-undo_like")
+                .removeClass("btn-like");
+            $(".like_image_" + image_id).attr(
+                "src",
+                url + "/img/arrowUpOn.png"
+            );
+            //UNDO DISLIKE
+            $(".dislike_image_" + image_id)
+                .addClass("btn-dislike")
+                .removeClass("btn-undo_dislike");
+            $(".dislike_image_" + image_id).attr(
+                "src",
+                url + "/img/arrowDownOff.png"
+            );
+            $(".dislike_image_" + image_id)
+                .closest(".flex")
+                .find("#count-dislikes")
+                .text(response.count_dislikes);
         }
         $(".like_image_" + image_id)
             .closest(".flex")
@@ -56,7 +77,7 @@ $(document).ready(function () {
     });
 
     function updateCountDislikes(response, image_id, mensaje) {
-        console.log(image_id);
+        console.log(image_id, " ", mensaje);
 
         if (mensaje === "dislike") {
             $(".dislike_image_" + image_id)
@@ -74,6 +95,27 @@ $(document).ready(function () {
                 "src",
                 url + "/img/arrowDownOff.png"
             );
+        } else if (mensaje === "dislike-undo_like") {
+            //DISLIKE
+            $(".dislike_image_" + image_id)
+                .addClass("btn-undo_dislike")
+                .removeClass("btn-dislike");
+            $(".dislike_image_" + image_id).attr(
+                "src",
+                url + "/img/arrowDownOn.png"
+            );
+            //UNDO LIKE
+            $(".like_image_" + image_id)
+                .addClass("btn-like")
+                .removeClass("btn-undo_like");
+            $(".like_image_" + image_id).attr(
+                "src",
+                url + "/img/arrowUpOff.png"
+            );
+            $(".like_image_" + image_id)
+                .closest(".flex")
+                .find("#count-likes")
+                .text(response.count_likes);
         }
         $(".dislike_image_" + image_id)
             .closest(".flex")
@@ -81,7 +123,7 @@ $(document).ready(function () {
             .text(response.count);
     }
 
-    // BUSCADOR
+    //FINDER
     $("#buscador").submit(function (e) {
         $(this).attr("action", url + "/gente/" + $("#buscador #search").val());
     });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Image;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -20,22 +21,41 @@ class ImageController extends Controller
         return view("image.create");
     }
 
+    public function finder($search = null)
+    {
+        if (!empty($search)) {
+            $images = Image::where('hashtag', 'LIKE', '%' . $search . '%')
+                ->orderBy('id', 'desc')
+                ->paginate(5);
+        } else {
+            $images = Image::orderBy('id', 'desc')->paginate(5);
+        }
+
+        return view('image.finder', [
+            'images' => $images
+        ]);
+    }
+
     public function save(Request $request)
     {
         $validate = $request->validate([
             'description' => ['required'],
             'image_path' => ['required', 'mimes:jpg,png,gif,wpeg,jpeg,svg,webp'],
+            'hashtag' => ['required'],
         ]);
 
 
         $image_path = $request->file("image_path");
         $description = $request->input("description");
+        $hashtag = $request->input("hashtag");
 
         $user = Auth::user();
         $image = new Image();
         $image->user_id = $user->id;
 
         $image->description = $description;
+
+        $image->hashtag = $hashtag;
 
         if ($image_path) {
             $image_path_name = time() . $image_path->getClientOriginalName();
@@ -70,6 +90,7 @@ class ImageController extends Controller
         $image = Image::find($id);
         $comments = Comment::where('image_id', $id)->get();
         $likes = Like::where('image_id', $id)->get();
+        $dislikes = Dislike::where('image_id', $id)->get();
 
         if ($user && $image && $image->user->id == $user->id) {
             //DELETE COMMENT
@@ -86,12 +107,12 @@ class ImageController extends Controller
                 }
             }
 
-            //DELETE DISLIKES
-            // if ($dislikes && count($dislikes) > 0) {
-            //     foreach ($dislikes as $dislike) {
-            //         $dislike->delete();
-            //     }
-            // }
+            // DELETE DISLIKES
+            if ($dislikes && count($dislikes) > 0) {
+                foreach ($dislikes as $dislike) {
+                    $dislike->delete();
+                }
+            }
 
             //DELETE IMAGES ON STORAGE
             Storage::disk('images')->delete($image->image_path);
@@ -125,15 +146,18 @@ class ImageController extends Controller
     {
         $validate = $request->validate([
             'description' => ['required'],
+            'hashtag' => ['required'],
             'image_path' => ['image'],
         ]);
 
         $image_id = $request->input('image_id');
         $image_path = $request->file('image_path');
         $description = $request->input('description');
+        $hashtag = $request->input('hashtag');
 
         $image = Image::find($image_id);
         $image->description = $description;
+        $image->hashtag = $hashtag;
 
         if ($image_path) {
             $image_path_name = time() . $image_path->getClientOriginalName();

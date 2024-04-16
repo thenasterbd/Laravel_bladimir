@@ -41,6 +41,20 @@
 
                             <div class="flex flex-col">
 
+                                <label for="hashtag" class="text-sm text-gray-700">Hashtag</label>
+                                <input name="hashtag" id="hashtag"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                    required> </input>
+
+                                @if ($errors->has('hashtag'))
+                                    <span class="invalid-feedback" role"alert">
+                                        <strong>{{ $errors->first('hashtag') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="flex flex-col">
+
                                 <label for="description" class="text-sm text-gray-700">Description</label>
                                 <textarea name="description" id="description"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
