@@ -25,6 +25,7 @@ return new class extends Migration
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('remember_token')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
         });
     }
 
