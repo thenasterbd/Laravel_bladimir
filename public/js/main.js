@@ -128,3 +128,4 @@ $(document).ready(function () {
         $(this).attr("action", url + "/gente/" + $("#buscador #search").val());
     });
 });
+

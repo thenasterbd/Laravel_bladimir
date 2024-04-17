@@ -8,26 +8,28 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id'); // Added user_id column
-            $table->string('image_path');
-            $table->text('description');
+            $table->integer('id', true);
+            $table->integer('user_id')->nullable()->index('fk_images_users');
+            $table->string('image_path')->nullable();
+            $table->text('description')->nullable();
             $table->string('hashtag');
-            $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('images');
     }

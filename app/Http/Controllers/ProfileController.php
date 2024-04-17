@@ -12,7 +12,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Response;
-use App\FormatTime;
+use App\Models\Comment;
+use App\Models\Like;
+use App\Models\Dislike;
+use App\Models\Image;
 
 class ProfileController extends Controller
 {
@@ -83,22 +86,59 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, $id)
     {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
+        $users = User::find($id);
+        $images = Image::where('user_id', $id)->get();
+        $comments = Comment::where('user_id', $id)->get();
+        $likes = Like::where('user_id', $id)->get();
+        $dislikes = Dislike::where('user_id', $id)->get();
 
-        Auth::logout();
+        if ($users && $images && count($images) > 0) {
+            //DELETE COMMENT
+            if ($comments && count($comments) > 0) {
+                foreach ($comments as $comment) {
+                    $comment->delete();
+                }
+            }
 
-        $user->delete();
+            //DELETE LIKES
+            if ($likes && count($likes) > 0) {
+                foreach ($likes as $like) {
+                    $like->delete();
+                }
+            }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            // DELETE DISLIKES
+            if ($dislikes && count($dislikes) > 0) {
+                foreach ($dislikes as $dislike) {
+                    $dislike->delete();
+                }
+            }
 
-        return Redirect::to('/');
+            //DELETE IMAGE AND DELETE FROM STORAGE
+            if ($images && count($images) > 0) {
+                foreach ($images as $image) {
+                    $image->delete();
+                    Storage::disk('images')->delete($image->image_path);
+                }
+            }
+
+            //DELETE PROFILE PHOTO ON STORAGE
+            Storage::disk('users')->delete($users->image);
+
+            //DELETE USER
+            Auth::logout();
+            $user->delete();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+        return Redirect::route('/');
     }
 
     public function config(Request $request): View
@@ -132,7 +172,7 @@ class ProfileController extends Controller
     {
         $user = User::find($id);
 
-        return view('user.profile', [
+        return view('profile.feed', [
             'user' => $user
         ]);
     }

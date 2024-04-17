@@ -17,17 +17,17 @@
                     </x-nav-link>
                 </div>
 
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
-                        {{ __('Users') }}
+                <div class="hidden space-x-8 sm:-my-px  sm:flex">
+                    <x-nav-link :href="route('images')" :active="request()->routeIs('images')">
+                        {{ __('Image Finder') }}
                     </x-nav-link>
-                </div> --}}
+                </div>
 
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px  sm:flex">
                     <x-nav-link :href="route('profile', ['id' => Auth::user()->id])" :active="request()->routeIs('profile')">
-                        {{ __('My Profile') }}
+                        {{ __('Profile') }}
                     </x-nav-link>
-                </div> --}}
+                </div>
 
                 <div class="hidden space-x-8 sm:-my-px  sm:flex">
                     <x-nav-link :href="route('image.create')" :active="request()->routeIs('image.create')">
@@ -111,25 +111,25 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
 
-        {{-- <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">
-                {{ __('Users') }}
+        <div class="space-y-1">
+            <x-responsive-nav-link :href="route('images')" :active="request()->routeIs('images')">
+                {{ __('Image Finder') }}
             </x-responsive-nav-link>
-        </div> --}}
+        </div>
 
-        {{-- <div class="pt-2 pb-3 space-y-1">
+        <div class="space-y-1">
             <x-responsive-nav-link :href="route('profile', ['id' => Auth::user()->id])" :active="request()->routeIs('profile')">
-                {{ __('My Profile') }}
+                {{ __('Profile') }}
             </x-responsive-nav-link>
-        </div> --}}
+        </div>
 
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="pb-3 space-y-1">
             <x-responsive-nav-link :href="route('image.create')" :active="request()->routeIs('image.create')">
                 {{ __('Upload a Photo') }}
             </x-responsive-nav-link>
@@ -150,7 +150,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Configurations') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
