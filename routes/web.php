@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/image/delete/{id}', [ImageController::class, 'delete'])->name('image.delete');
     Route::get('/image/edit/{id}', [ImageController::class, 'edit'])->name('image.edit');
     Route::post('/image/update', [ImageController::class, 'update'])->name('image.update');
-    Route::get('/images/{search?}', [ImageController::class, 'finder'])->name('images');
+    Route::get('/images/{search?}/{sort_by?}', [ImageController::class, 'finder'])->name('images');
 
     Route::post('/comment/save', [CommentController::class, 'save'])->middleware(['verified'])->name('comment.save');
     Route::get('/comment/delete/{id}', [CommentController::class, 'delete'])->middleware(['verified'])->name('comment.delete');

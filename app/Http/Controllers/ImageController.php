@@ -21,21 +21,6 @@ class ImageController extends Controller
         return view("image.create");
     }
 
-    public function finder($search = null)
-    {
-        if (!empty($search)) {
-            $images = Image::where('hashtag', 'LIKE', '%' . $search . '%')
-                ->orderBy('id', 'desc')
-                ->paginate(5);
-        } else {
-            $images = Image::orderBy('id', 'desc')->paginate(5);
-        }
-
-        return view('image.finder', [
-            'images' => $images
-        ]);
-    }
-
     public function save(Request $request)
     {
         $validate = $request->validate([
@@ -168,6 +153,63 @@ class ImageController extends Controller
         $image->update();
 
         return Redirect::route('image.detail', ['id' => $image_id])->with('status', 'post-updated');
+    }
+// finder and searchs
+    public function finder(Request $request)
+    {
+        $query = Image::query();
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'default');
+        if ($search) {
+            $query->where('tag', 'LIKE', '%' . $search . '%');
+        }
+        switch ($sortBy) {
+            case 'likes':
+                $query->leftJoinSub(
+                    'SELECT image_id, COUNT(*) as likes_count FROM likes GROUP BY image_id',
+                    'likes',
+                    'images.id',
+                    '=',
+                    'likes.image_id'
+                );
+                $query->orderByDesc('likes.likes_count');
+                break;
+            case 'dislikes':
+                $query->leftJoinSub(
+                    'SELECT image_id, COUNT(*) as dislikes_count FROM dislikes GROUP BY image_id',
+                    'dislikes',
+                    'images.id',
+                    '=',
+                    'dislikes.image_id'
+                );
+                $query->orderByDesc('dislikes.dislikes_count');
+                break;
+            case 'comments':
+                $query->leftJoinSub(
+                    'SELECT image_id, COUNT(*) as comments_count FROM comments GROUP BY image_id',
+                    'comments',
+                    'images.id',
+                    '=',
+                    'comments.image_id'
+                );
+                $query->orderByDesc('comments.comments_count');
+                break;
+            case 'recent':
+                $query->orderByDesc('id');
+                break;
+            case 'oldest':
+                $query->orderBy('id');
+                break;
+            default:
+                $query->orderByDesc('id');
+                break;
+        }
+        $images = $query->paginate(5);
+        return view('image.finder', [
+            'images' => $images,
+            'search' => $search,
+            'sortBy' => $sortBy
+        ]);
     }
 
 }

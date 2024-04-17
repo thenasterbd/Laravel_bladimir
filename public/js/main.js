@@ -124,8 +124,25 @@ $(document).ready(function () {
     }
 
     //FINDER
-    $("#buscador").submit(function (e) {
-        $(this).attr("action", url + "/gente/" + $("#buscador #search").val());
+    if (
+        window.location.href === url + "/images" ||
+        window.location.href === url + "/images?" ||
+        window.location.href === url + "/images/"
+    ) {
+        localStorage.removeItem("searchQuery");
+    }
+    const searchQuery = localStorage.getItem("searchQuery");
+    if (searchQuery) {
+        $("#search-results-info").html(`Seen results from: ${searchQuery}`);
+    }
+    $("#finder").submit(function (e) {
+        e.preventDefault();
+        const searchQuery = $("#finder #search").val();
+        localStorage.setItem("searchQuery", searchQuery);
+        const newUrl = url + "/images/" + searchQuery;
+        console.log(newUrl);
+        $("#search-results-info").html(`Seen results from: ${searchQuery}`);
+        window.location.href = newUrl;
     });
 });
 
